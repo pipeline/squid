@@ -93,6 +93,28 @@ module Squid
       end
     end
 
+    def stacked_area(series, options = {})
+      top_points    = []
+      bottom_points = []
+
+      highest_index = series.last.last.index
+
+      items(series, options) do |point, w, i, padding|
+        x, y = (point.index + 0.5)*w + left, @bottom + point.y
+        top_points << [x, y]
+        bottom_points << [x, y - point.height]
+
+        if point.index == highest_index
+          with cap_style: :round do
+            points = bottom_points + top_points.reverse
+            @pdf.fill_polygon(*points)
+            bottom_points = []
+            top_points = []
+          end
+        end
+      end
+    end
+
     def stacks(series, options = {})
       items(series, options.merge(fill: true)) do |point, w, i, padding|
         x, y = point.index*w + padding + left, point.y + @bottom

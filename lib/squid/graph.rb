@@ -75,6 +75,7 @@ module Squid
         when :line, :two_axis then @plot.lines points, options.merge(line_widths: line_widths)
         when :column then @plot.columns points, options
         when :stack then @plot.stacks points, options
+        when :stacked_area then @plot.stacked_area points, options
       end
     end
 
@@ -117,7 +118,7 @@ module Squid
     end
 
     def stack?
-      type == :stack
+      type == :stack || type == :stacked_area
     end
 
     def two_axis?
